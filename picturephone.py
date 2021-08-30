@@ -1,8 +1,6 @@
 #!/bin/env python
 # -*- coding: utf-8 -*-
 
-# https://medium.com/swlh/decoding-noaa-satellite-images-using-50-lines-of-code-3c5d1d0a08da
-
 # some metadata may upset the reading of the wav file. Clear this out with:
 # $ sox PicturePhoneDataMono.wav PicturePhoneDataMono2b.wav
 
@@ -267,7 +265,7 @@ def main():
     makeVideoFromData(fs, data_am)
     makeVideoShiftImageLeft(fs, data_am, 2422)
 
-    ## older method, seperate images an video
+    ## older method, seperate images and video
     # makeImagesAndVideo(fs, data_am)
 
     return
