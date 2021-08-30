@@ -4,9 +4,8 @@
 # https://medium.com/swlh/decoding-noaa-satellite-images-using-50-lines-of-code-3c5d1d0a08da
 
 # some metadata may upset the reading of the wav file. Clear this out with:
-# $ sox PicturePhoneDataMonoXXX.wav PicturePhoneDataMono.wav
+# $ sox PicturePhoneDataMono.wav PicturePhoneDataMono2b.wav
 
-from os import waitpid
 import scipy.io.wavfile as wav
 import scipy.signal as signal
 import numpy as np
@@ -158,9 +157,6 @@ def makeVideoShiftImageLeft(fs, data_am, pctWidth):
 
     for w in range(1, int(pw/2)):
         pct15img = ImageChops.offset(pct15img, -1, 0)
-        # h.set_data(pct15img)
-        # draw(), pause(1e-3)
-
 
         frame = np.array(pct15img)           
         frame = frame[:, :, ::-1].copy()    # Convert RGB to BGR
@@ -179,14 +175,10 @@ def makeVideoShiftImageLeft(fs, data_am, pctWidth):
     return
 
 
-
-
 def hilbert(data):
     analytical_signal = signal.hilbert(data)
     amplitude_envelope = np.abs(analytical_signal)
     return amplitude_envelope
-
-
 
 def plotData(data_am, fs, width):
 
@@ -222,6 +214,31 @@ def plotData(data_am, fs, width):
 
     return image
 
+def makeImagesAndVideo(fs, data_am):
+
+    if not os.path.isdir(OUTIMGDIR):
+        os.mkdir(OUTIMGDIR)
+    else:
+        deleteOutput()
+
+    widthStart=80
+    widthEnd=2000
+    # image = plotData(data_am, fs, widthStart-1)
+    # h = plt.imshow(image)
+
+    with Bar('Processing...',max = widthEnd) as bar:
+        for w in range(widthStart, widthEnd, 1):
+            #print(f"width: {w}")
+            image = plotData(data_am, fs, w)
+            # h.set_data(image)
+            # draw(), pause(1e-3)
+            fileout = os.path.join(OUTIMGDIR, f"ssdraw-{w:05}.png")
+            plt.imsave(fileout, image)
+            bar.next()
+
+    makeVideoFromImages()
+    return
+
 def main():
 
     fs, data = wav.read(WAVFILE)
@@ -245,32 +262,13 @@ def main():
     # plt.show()
 
 
-
-    # if not os.path.isdir(OUTIMGDIR):
-    #     os.mkdir(OUTIMGDIR)
-    # else:
-    #     deleteOutput()
-
-  #  makeVideoFromData(fs, data_am)
-
+    ## these two are the main decoding functions
+    # 
+    makeVideoFromData(fs, data_am)
     makeVideoShiftImageLeft(fs, data_am, 2422)
 
-    # widthStart=80
-    # widthEnd=2000
-    # # image = plotData(data_am, fs, widthStart-1)
-    # # h = plt.imshow(image)
-
-    # with Bar('Processing...',max = widthEnd) as bar:
-    #     for w in range(widthStart, widthEnd, 1):
-    #         #print(f"width: {w}")
-    #         image = plotData(data_am, fs, w)
-    #         # h.set_data(image)
-    #         # draw(), pause(1e-3)
-    #         fileout = os.path.join(OUTIMGDIR, f"ssdraw-{w:05}.png")
-    #         plt.imsave(fileout, image)
-    #         bar.next()
-
-    # makeVideoFromImages()
+    ## older method, seperate images an video
+    # makeImagesAndVideo(fs, data_am)
 
     return
 
