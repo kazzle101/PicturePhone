@@ -5,4 +5,4 @@ The method I have used is a bit basic, rather than listening for the sync tone t
 
 Here is an edited together video of the output: https://www.youtube.com/watch?v=tmt7xz1QkUM
 
-I won;t be doing anymore on this particular method, I need to work out how to do this properly, by having the program listen to the tones and decode accoringly.
+I won't be doing anymore on this particular method. I need to work out how to do this properly, by having the program listen to the tones and decode accoringly.
